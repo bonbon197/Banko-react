@@ -15,7 +15,7 @@ function App() {
         </a>
       </div>
       <h1>Banko</h1>
-      <h2>Upo ka muna habang naghihintay</h2>
+      <h2>Some Tagline relating sa upuan</h2>
       <div className="formContainer">
         <RegistrationForm />
       </div>
