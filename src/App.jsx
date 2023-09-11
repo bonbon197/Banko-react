@@ -2,7 +2,7 @@ import { useState } from 'react'
 import bankoLogo from './assets/banko_logo.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import RegistrationForm from '/components/RegistrationForm'
+import RegistrationForm from './components/RegistrationForm'
 
 function App() {
 
