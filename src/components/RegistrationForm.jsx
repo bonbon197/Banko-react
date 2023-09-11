@@ -13,8 +13,8 @@ const RegistrationForm = () => {
   };
 
   // event handler/s
-  const handleEmailChange = (event) => {
-    const inputEmail = event.target.value;
+  const handleEmailChange = (e) => {
+    const inputEmail = e.target.value;
     setEmail(inputEmail);
 
     setIsEmailValid(validateEmail(inputEmail));
