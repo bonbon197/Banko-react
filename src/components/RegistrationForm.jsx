@@ -59,7 +59,7 @@ const RegistrationForm = () => {
         </div>
       </div>
 
-      <Button color="primary">Log In</Button>
+      <Button color="primary">Register</Button>
     </>
   );
 };
