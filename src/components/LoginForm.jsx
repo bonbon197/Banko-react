@@ -32,10 +32,20 @@ const LoginForm = () => {
     return(
         <form onSubmit={onSubmit}>
             <label htmlFor="">Username</label>
-            <input type="text" />
+            <input 
+                type="text"
+                id = "username"
+                value = {username}
+                onChange = {onChangeUsername} 
+            />
 
             <label htmlFor="">Password</label>
-            <input type="password" />
+            <input 
+                type="password"
+                id = "password"
+                value = {password}
+                onChange = {onChangePassword} 
+            />
 
             <button type="submit">Log In</button>
         </form>
