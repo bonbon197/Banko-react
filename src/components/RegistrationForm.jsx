@@ -2,17 +2,14 @@ import { useState } from 'react';
 import { Button } from 'react-bulma-components';
 
 const RegistrationForm = () => {
-  // state managers
   const [email, setEmail] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
 
-  // function to validate email format
   const validateEmail = (input) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailPattern.test(input);
   };
 
-  // event handler/s
   const handleEmailChange = (e) => {
     const inputEmail = e.target.value;
     setEmail(inputEmail);

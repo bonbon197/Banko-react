@@ -5,45 +5,43 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import RegistrationForm from './components/RegistrationForm'
 import LoginForm from './components/LoginForm'
+import HomePage from './components/HomePage'
 
 function App() {
 
-  useEffect(() => {
-    const accounts = [
-      {
-        username: 'admin',
-        password: 'admin',
-      },
-      {
-        username: 'user',
-        password: 'user',
-      },
-    ]
+  const [currentPage, setCurrentPage] = useState('home');
 
-    localStorage.setItem('accounts', JSON.stringify(accounts))
-  }, [])
+  const pageChange = (page) => {
+    setCurrentPage(page);
+  }
+
+  if (currentPage === 'home') {
+    return (
+      <>
+      <HomePage onPageChange={pageChange}/>
+      </>
+    );
+  }
+
+  if (currentPage === 'register') {
+    return (
+      <>
+      <RegistrationForm onPageChange={pageChange}/>
+      </>
+    );
+  }
+
+  if (currentPage === 'login') {
+    return (
+      <>
+      <LoginForm onPageChange={pageChange}/>
+      </>
+    );
+  }
 
   return (
     <>
-    <section className="section is-large">
-      <div className="card">
-      <div className="logo-container">
-
-        <a href="#" target="_blank">
-          <img src={bankoLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1 className="title">Banko</h1>
-      <h2 className="subtitle">Some Tagline relating sa upuan</h2>
-      <div className="container">
-        <RegistrationForm />
-      </div>
-
-      <div className="container">
-        <LoginForm />
-      </div>
-      </div>
-    </section>
+    <h1>????</h1>
     </>
   )
 }

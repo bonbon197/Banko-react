@@ -2,6 +2,21 @@ import { useState } from 'react';
 
 const LoginForm = () => {
 
+    useEffect(() => {
+        const accounts = [
+          {
+            username: 'admin',
+            password: 'admin',
+          },
+          {
+            username: 'user',
+            password: 'user',
+          },
+        ]
+    
+        localStorage.setItem('accounts', JSON.stringify(accounts))
+      }, [])
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
