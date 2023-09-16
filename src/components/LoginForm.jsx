@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { useEffect } from 'react';
 
-const LoginForm = () => {
+
+const LoginForm = ({onPageChange}) => {
 
     useEffect(() => {
         const accounts = [
@@ -25,23 +27,15 @@ const LoginForm = () => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-
+      
         const accounts = JSON.parse(localStorage.getItem('accounts'));
-
-        const account = accounts.find((account) => {
-            if (account.username === username && account.password === password){
-                return account;
-            }
-
-            return null;
+      
+        const account = accounts.find((account) => account.username === username && account.password === password);
+      
+        if (account) {
+          onPageChange('dashboard', username);
         }
-        );
-
-        console.log({
-            username,
-            password
-        });
-    };
+      };
 
 
     return(

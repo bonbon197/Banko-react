@@ -1,9 +1,9 @@
-const Dashboard = () => {
+const Dashboard = ({username}) => {
     return(
         <section className="section is-large">
         <div className="card">
 
-        <h2 className="subtitle">Hello Username</h2>
+        <h2 className="subtitle">Hello {username}</h2>
         </div>
       </section>
   

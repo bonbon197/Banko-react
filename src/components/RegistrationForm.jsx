@@ -3,6 +3,7 @@ import { Button } from 'react-bulma-components';
 
 const RegistrationForm = () => {
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
 
   const validateEmail = (input) => {
@@ -17,8 +18,32 @@ const RegistrationForm = () => {
     setIsEmailValid(validateEmail(inputEmail));
   };
 
+  const handlePasswordChange = (e) => {
+    const inputPassword = e.target.value;
+    setPassword(inputPassword);
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    if (isEmailValid) {
+      const newAccount = {
+        email: email,
+        password: password,
+      };
+      onRegistration(newAccount);
+
+      setEmail('');
+      setPassword('');
+
+      console.log('Registration successful');
+      console.log(newAccount);
+    }
+  };
+
   return (
     <>
+    <form onSubmit={onSubmit}>
       <div className="field">
         <div className={`control has-icons-left has-icons-right${isEmailValid ? '' : ' has-icons-danger'}`}>
           <input
@@ -46,7 +71,12 @@ const RegistrationForm = () => {
 
       <div className="field">
         <div className="control has-icons-left has-icons-right">
-          <input className="input" type="password" placeholder="Password" />
+          <input 
+            className="input" 
+            type="password"
+            value={password}
+            onChange={handlePasswordChange}
+            placeholder="Password" />
           <span className="icon is-small is-left">
             <i className="fas fa-lock"></i>
           </span>
@@ -56,7 +86,8 @@ const RegistrationForm = () => {
         </div>
       </div>
 
-      <Button color="primary">Register</Button>
+      <Button type="submit" color="primary">Register</Button>
+      </form>
     </>
   );
 };
