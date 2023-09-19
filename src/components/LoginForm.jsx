@@ -1,64 +1,63 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
 
+import UserAccount from '../models/UserAccount';
+import { getFromLocalStorage } from '../db/dbInterface';
 
-const LoginForm = ({onPageChange}) => {
+const LoginForm = ({ onPageChange }) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-    useEffect(() => {
-        const accounts = [
-          {
-            username: 'admin',
-            password: 'admin',
-          },
-          {
-            username: 'user',
-            password: 'user',
-          },
-        ]
-    
-        localStorage.setItem('accounts', JSON.stringify(accounts))
-      }, [])
-
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-
-    const onChangeUsername = (e) => setUsername(e.target.value);
-    const onChangePassword = (e) => setPassword(e.target.value);
-
-    const onSubmit = (e) => {
-        e.preventDefault();
-      
-        const accounts = JSON.parse(localStorage.getItem('accounts'));
-      
-        const account = accounts.find((account) => account.username === username && account.password === password);
-      
-        if (account) {
-          onPageChange('dashboard', username);
-        }
-      };
+  const handleUsernameChange = (e) => setUsername(e.target.value);
+  const handlePasswordChange = (e) => setPassword(e.target.value);
 
 
-    return(
-        <form onSubmit={onSubmit}>
-            <label htmlFor="">Username</label>
-            <input 
-                type="text"
-                id = "username"
-                value = {username}
-                onChange = {onChangeUsername} 
-            />
 
-            <label htmlFor="">Password</label>
-            <input 
-                type="password"
-                id = "password"
-                value = {password}
-                onChange = {onChangePassword} 
-            />
+  const onSubmit = (e) => {
+    e.preventDefault();
 
-            <button type="submit">Log In</button>
-        </form>
-    );
+    const accounts = getFromLocalStorage();
+
+    const account = accounts.find((account) => account.username === username);
+
+    console.log(account);
+
+
+    if (account && account.password === password) {
+      onPageChange('dashboard', account);
+    } else {
+      setErrorMessage('Invalid username or password');
+    }
+  };
+
+
+
+
+  return (
+    <section className="section is-large">
+      <form onSubmit={onSubmit}>
+        <label htmlFor="username">Username</label>
+        <input 
+          type="text" 
+          id="username"
+          value={username}
+          onChange={handleUsernameChange}
+        />
+
+        <label htmlFor="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          value={password}
+          onChange={handlePasswordChange}
+        />
+
+        <button type="submit">Log In</button>
+        {errorMessage && <p className="error">{errorMessage}</p>}
+      </form>
+    </section>
+  )
 };
 
 export default LoginForm;

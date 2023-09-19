@@ -1,66 +1,45 @@
 import { useState } from 'react'
 import { useEffect } from 'react'
+
 import bankoLogo from './assets/banko_logo.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+
+import HomePage from './components/HomePage'
 import RegistrationForm from './components/RegistrationForm'
 import LoginForm from './components/LoginForm'
-import HomePage from './components/HomePage'
 import Dashboard from './components/Dashboard'
+import initializeDataStorage from './db/accounts'
 
 function App() {
 
-  const [currentPage, setCurrentPage] = useState('home');
-  const [username, setUsername] = useState('');
-  const [accounts, setAccounts] = useState([]);
+  useEffect(() => {
+    initializeDataStorage();
+  }, []);
 
-  const handleRegistration = (newAccount) => {
-    setAccounts((prevAccounts) => [...prevAccounts, newAccount]);
-    localStorage.setItem('accounts', JSON.stringify([...accounts, newAccount]));
-  }
 
-  const pageChange = (page, newUsername = '') => {
-    setCurrentPage(page);
-    setUsername(newUsername);
-  }
+  const [page, setPage] = useState('home')
+  const [account, setAccount] = useState(null)
 
-  if (currentPage === 'home') {
-    return (
-      <>
-      <HomePage onPageChange={pageChange}/>
-      </>
-    );
-  }
 
-  if (currentPage === 'register') {
-    return (
-      <>
-      <RegistrationForm onPageChange={pageChange} onRegistration={handleRegistration}/>
-      </>
-    );
-  }
+  const onPageChange = (page, account) => {
+    if (page === 'dashboard') {
+      setAccount(account);
+    }
 
-  if (currentPage === 'login') {
-    return (
-      <>
-      <LoginForm onPageChange={pageChange}/>
-      </>
-    );
-  }
+    setPage(page);
+  };
 
-  if (currentPage === 'dashboard') {
-    return (
-      <>
-      <Dashboard onPageChange={pageChange} username={username} />
-      </>
-    );
-  }
 
   return (
     <>
-    <h1>????</h1>
+      {page === 'home' && <HomePage onPageChange={onPageChange} />}
+      {page === 'register' && <RegistrationForm onPageChange={onPageChange}/>}
+      {page === 'login' && <LoginForm onPageChange={onPageChange} />}
+      {page === 'dashboard' && <Dashboard onPageChange={onPageChange} account={account} />}
     </>
-  )
+  );
+
 }
 
 export default App
