@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Modal from 'react-modal';
-import 'react-modal/style.css'
+// import 'react-modal/style.css'
 
 
 
@@ -26,6 +26,9 @@ const Dashboard = ({account}) => {
       setDepositError('Please enter a valid amount');
       return;
     }
+
+    const newBalance = account.balance + parseInt(depositAmount);
+    const updatedAccount = {...account, balance: newBalance};
 
     setDepositModalIsOpen(false);
     setDepositError('');
@@ -126,25 +129,38 @@ const Dashboard = ({account}) => {
         </div>
       </section>
 
-
-      <Modal isOpen={isDepositModalOpen} onRequestClose={closeDepositModal}>
-      <div class="modal">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-          <header class="modal-card-head">
-            <p class="modal-card-title">Modal title</p>
-            <button class="delete" aria-label="close"></button>
-          </header>
-          <section class="modal-card-body">
-            <h2>Deposit</h2>
-          </section>
-          <footer class="modal-card-foot">
-          <button onClick={closeDepositModal}>Cancel</button>            
-          </footer>
+      <Modal
+        isOpen={depositModalIsOpen}
+        onRequestClose={closeDepositModal}
+        contentLabel="Deposit Modal"
+        ariaHideApp={false}
+        className="modal"
+        overlayClassName="modal-background"
+      >
+        <div className="modal">
+          <div className="modal-background"></div>
+          <div className="modal-content">
+            <form onSubmit={handleDeposit}>
+              <div className="field">
+                <label className="label">Deposit Amount</label>
+                <div className="control">
+                  <input className="input" type="number" placeholder="Enter amount" value={depositAmount} onChange={(e) => setDepositAmount(e.target.value)} />
+                </div>
+                {depositError && <p className="help is-danger">{depositError}</p>}
+              </div>
+              <div className="field is-grouped">
+                <div className="control">
+                  <button className="button is-link">Deposit</button>
+                </div>
+                <div className="control">
+                  <button className="button is-link is-light" onClick={closeDepositModal}>Cancel</button>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
-        
       </Modal>
+
       </>
     );
 }
