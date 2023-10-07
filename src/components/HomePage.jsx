@@ -17,18 +17,15 @@ const HomePage = ({onPageChange}) => {
         <h2 className="subtitle">Some Tagline relating sa upuan</h2>
         <div className="container">
           <p>May account ka na ba?</p>
-  
-          <div className="level-left">
-            <div className="level-item">
-              <p className="heading">Meron na</p>
-              <button className="button is-primary" onClick={() => onPageChange('login')}>Log In</button>
-            </div>
-          </div>
-  
-          <div className="level-right">
-            <div className="level-item has-text-centered">
-              <p className="heading">Wala pa</p>
-              <button className="button is-primary" onClick={() => onPageChange('register')}>Register</button>
+
+          <div className="container">
+            <div className="field is-grouped">
+              <p className="control">
+                <button className="button is-primary" onClick={() => onPageChange('login')}>Log In</button>
+              </p>
+              <p className="control">
+                <button className="button is-link" onClick={() => onPageChange('register')}>Register</button>
+              </p>
             </div>
           </div>
   

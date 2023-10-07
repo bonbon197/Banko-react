@@ -146,6 +146,7 @@ const Dashboard = ({ account }) => {
     <>
       <section className="section is-large">
         <div className="card">
+          <h6 className="subtitle">ID: {account.id}</h6>
           <h2 className="subtitle">Hello {account.firstName}</h2>
           <h2 className="subtitle">Your current balance is {currentBalance}</h2>
           <div className="container">
