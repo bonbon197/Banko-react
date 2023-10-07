@@ -24,6 +24,7 @@ const Dashboard = ({ account }) => {
   });
 
   const [currentBalance, setCurrentBalance] = useState(0);
+  const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
     if (account) {
@@ -61,6 +62,14 @@ const Dashboard = ({ account }) => {
       acc.id === account.id ? account : acc
   );
 
+  const newTransaction = {
+    date: new Date().toLocaleString(),
+    description: 'Deposit',
+    amount: depositAmount,
+  };
+
+  setTransactions([...transactions, newTransaction]);
+
   saveToLocalStorage(updatedAccounts);
   setCurrentBalance(account.balance);
   closeModal('deposit');
@@ -84,6 +93,14 @@ const Dashboard = ({ account }) => {
     const updatedAccounts = accounts.map((acc) =>
       acc.id === account.id ? account : acc
     );
+
+    const newTransaction = {
+      date: new Date().toLocaleString(),
+      description: 'Deposit',
+      amount: withdrawAmount,
+    };
+  
+    setTransactions([...transactions, newTransaction]);
 
     saveToLocalStorage(updatedAccounts);
     setCurrentBalance(account.balance);

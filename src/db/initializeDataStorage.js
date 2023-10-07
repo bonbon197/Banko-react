@@ -14,6 +14,13 @@ const initializeDataStorage = () => {
                 lastName: 'TestUser1',
                 password: '123456',
                 balance: 1000,
+                transactions: [
+                    {
+                        date: '2020-01-01',
+                        description: 'Initial deposit',
+                        amount: 1000,
+                    }
+                ]
             },
             {
                 id: 2,
@@ -23,6 +30,13 @@ const initializeDataStorage = () => {
                 lastName: 'TestUser2',
                 password: '1234567',
                 balance: 500,
+                transactions: [
+                    {
+                        date: '2020-01-01',
+                        description: 'Initial deposit',
+                        amount: 500,
+                    }
+                ]
             }
         ];
 

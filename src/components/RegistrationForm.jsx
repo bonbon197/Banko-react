@@ -10,6 +10,8 @@ const RegistrationForm = () => {
   const [username, setUsername] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [balance, setBalance] = useState(0);
+  const [transactions, setTransactions] = useState([]);
   const [isEmailValid, setIsEmailValid] = useState(true);
 
 
@@ -106,6 +108,7 @@ const RegistrationForm = () => {
         firstName: firstName,
         lastName: lastName,
         balance: 0,
+        transactions: []
       };
       
       onRegistration(newAccount);
@@ -115,6 +118,8 @@ const RegistrationForm = () => {
       setUsername('');
       setFirstName('');
       setLastName('');
+      setBalance(0);
+      setTransactions([]);
       setIsEmailValid(true);
 
       console.log('Registration successful');
