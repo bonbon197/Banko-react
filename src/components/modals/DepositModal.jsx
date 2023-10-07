@@ -41,4 +41,4 @@ const DepositModal = ({ isOpen, onClose, onDeposit, amount, onChangeAmount, depo
     );
   };
 
-  export default DepositModal ;
+  export default DepositModal

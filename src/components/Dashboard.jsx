@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import Modal from 'react-modal';
 import { saveToLocalStorage, getFromLocalStorage } from "../db/dbInterface";
-import { DepositModal } from "./modals/DepositModal";
-import { WithdrawalModal } from "./modals/WithdrawModal";
+import DepositModal from "./modals/DepositModal";
+import WithdrawalModal from "./modals/WithdrawModal";
 
 const Dashboard = ({ account }) => {
   const [modalIsOpen, setModalIsOpen] = useState({
