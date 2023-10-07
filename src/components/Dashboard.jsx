@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Modal from 'react-modal';
 import { saveToLocalStorage, getFromLocalStorage } from "../db/dbInterface";
 import { DepositModal } from "./modals/DepositModal";
+import { WithdrawalModal } from "./modals/WithdrawModal";
 
 const Dashboard = ({ account }) => {
   const [modalIsOpen, setModalIsOpen] = useState({
@@ -52,18 +53,17 @@ const Dashboard = ({ account }) => {
       return;
     }
     
-    const newBalance = account.balance + depositAmount;
-    const updatedAccount = { ...account, balance: newBalance };
+
+    account.balance += depositAmount;
 
     const accounts = getFromLocalStorage('accounts');
-
     const updatedAccounts = accounts.map((acc) =>
-      acc.id === updatedAccount.id ? updatedAccount : acc
-    );
+      acc.id === account.id ? account : acc
+  );
 
-    saveToLocalStorage(updatedAccounts);
-    setCurrentBalance(newBalance);
-    closeModal('deposit');
+  saveToLocalStorage(updatedAccounts);
+  setCurrentBalance(account.balance);
+  closeModal('deposit');
   }
 
   const handleWithdraw = (e) => {
@@ -78,6 +78,15 @@ const Dashboard = ({ account }) => {
       return;
     }
 
+    account.balance -= withdrawAmount;
+
+    const accounts = getFromLocalStorage('accounts');
+    const updatedAccounts = accounts.map((acc) =>
+      acc.id === account.id ? account : acc
+    );
+
+    saveToLocalStorage(updatedAccounts);
+    setCurrentBalance(account.balance);
     closeModal('withdraw');
   }
 
@@ -139,6 +148,28 @@ const Dashboard = ({ account }) => {
         </div>
       </section>
 
+      <section>
+        <div className="card">
+          <h2 className="subtitle">Transaction History</h2>
+          <div className="container">
+            <div className="card">
+              <div className="card-content">
+                <div className="content">
+                    {transactions.map((transaction, index) => (
+                      <div key={index} className="transaction">
+                        <p>Transaction {index + 1}</p>
+                        <p>Date: {transaction.date}</p>
+                        <p>Description: {transaction.description}</p>
+                        <p>Amount: ${transaction.amount}</p>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <DepositModal
         isOpen={modalIsOpen.deposit}
         onClose={() => closeModal('deposit')}
@@ -148,13 +179,14 @@ const Dashboard = ({ account }) => {
         depositError={errors.deposit}
       />
 
-      <Modal
+      <WithdrawalModal
         isOpen={modalIsOpen.withdraw}
-        onRequestClose={() => closeModal('withdraw')}
-        contentLabel="Withdraw Modal"
-        ariaHideApp={false}
-      >
-      </Modal>
+        onClose={() => closeModal('withdraw')}
+        onWithdraw={handleWithdraw}
+        amount={amounts.withdraw}
+        onChangeAmount={(e) => handleChangeAmount('withdraw', e)}
+        depositError={errors.withdraw}
+      />
 
       <Modal
         isOpen={modalIsOpen.transfer}
