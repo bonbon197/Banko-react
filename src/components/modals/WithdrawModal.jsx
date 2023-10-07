@@ -41,4 +41,4 @@ const WithdrawalModal = ({ isOpen, onClose, onWithdraw, amount, onChangeAmount, 
   );
 };
 
-export { WithdrawalModal };
+export default WithdrawalModal;
