@@ -1,152 +1,220 @@
 import { useState, useEffect } from "react";
 import Modal from 'react-modal';
-import 'react-modal/style.css'
+import { saveToLocalStorage, getFromLocalStorage } from "../db/dbInterface";
+import DepositModal from "./modals/DepositModal";
+import WithdrawalModal from "./modals/WithdrawModal";
 
+const Dashboard = ({ account }) => {
+  const [modalIsOpen, setModalIsOpen] = useState({
+    deposit: false,
+    withdraw: false,
+    transfer: false,
+  });
 
+  const [amounts, setAmounts] = useState({
+    deposit: 0,
+    withdraw: 0,
+    transfer: 0,
+  });
 
-const Dashboard = ({account}) => {
+  const [errors, setErrors] = useState({
+    deposit: '',
+    withdraw: '',
+    transfer: '',
+  });
 
-  const [depositModalIsOpen, setDepositModalIsOpen] = useState(false);
-  const [withdrawModalIsOpen, setWithdrawModalIsOpen] = useState(false);
-  const [transferModalIsOpen, setTransferModalIsOpen] = useState(false);
+  const [currentBalance, setCurrentBalance] = useState(0);
+  const [transactions, setTransactions] = useState([]);
 
-  const [depositAmount, setDepositAmount] = useState(0);
-  const [withdrawAmount, setWithdrawAmount] = useState(0);
-  const [transferAmount, setTransferAmount] = useState(0);
-  const [transferAccount, setTransferAccount] = useState('');
+  useEffect(() => {
+    if (account) {
+      setCurrentBalance(account.balance);
+    }
+  }, [account]);
 
-  const [depositError, setDepositError] = useState('');
-  const [withdrawError, setWithdrawError] = useState('');
-  const [transferError, setTransferError] = useState('');
+  const openModal = (type) => {
+    setModalIsOpen({ ...modalIsOpen, [type]: true });
+  }
 
+  const closeModal = (type) => {
+    setModalIsOpen({ ...modalIsOpen, [type]: false });
+  }
+
+  const handleChangeAmount = (type, e) => {
+    setAmounts({ ...amounts, [type]: e.target.value });
+    setErrors({ ...errors, [type]: '' });
+  }
 
   const handleDeposit = (e) => {
     e.preventDefault();
+    const depositAmount = parseInt(amounts.deposit);
+    
     if (depositAmount <= 0) {
-      setDepositError('Please enter a valid amount');
+      setErrors({ ...errors, deposit: 'Please enter a valid amount' });
       return;
     }
+    
 
-    setDepositModalIsOpen(false);
-    setDepositError('');
+    account.balance += depositAmount;
+
+    const accounts = getFromLocalStorage('accounts');
+    const updatedAccounts = accounts.map((acc) =>
+      acc.id === account.id ? account : acc
+  );
+
+  const newTransaction = {
+    date: new Date().toLocaleString(),
+    description: 'Deposit',
+    amount: depositAmount,
+  };
+
+  setTransactions([...transactions, newTransaction]);
+
+  saveToLocalStorage(updatedAccounts);
+  setCurrentBalance(account.balance);
+  closeModal('deposit');
   }
 
   const handleWithdraw = (e) => {
     e.preventDefault();
+    const withdrawAmount = parseInt(amounts.withdraw);
+
     if (withdrawAmount <= 0) {
-      setWithdrawError('Please enter a valid amount');
+      setErrors({ ...errors, withdraw: 'Please enter a valid amount' });
       return;
     } else if (withdrawAmount > account.balance) {
-      setWithdrawError('You do not have enough funds');
+      setErrors({ ...errors, withdraw: 'You do not have enough funds' });
       return;
     }
 
-    setWithdrawModalIsOpen(false);
-    setWithdrawError('');
+    account.balance -= withdrawAmount;
+
+    const accounts = getFromLocalStorage('accounts');
+    const updatedAccounts = accounts.map((acc) =>
+      acc.id === account.id ? account : acc
+    );
+
+    const newTransaction = {
+      date: new Date().toLocaleString(),
+      description: 'Deposit',
+      amount: withdrawAmount,
+    };
+  
+    setTransactions([...transactions, newTransaction]);
+
+    saveToLocalStorage(updatedAccounts);
+    setCurrentBalance(account.balance);
+    closeModal('withdraw');
   }
 
   const handleTransfer = (e) => {
     e.preventDefault();
+    const transferAmount = parseInt(amounts.transfer);
+
     if (transferAmount <= 0) {
-      setTransferError('Please enter a valid amount');
+      setErrors({ ...errors, transfer: 'Please enter a valid amount' });
       return;
     } else if (transferAmount > account.balance) {
-      setTransferError('You do not have enough funds');
+      setErrors({ ...errors, transfer: 'You do not have enough funds' });
       return;
     }
 
-    setTransferModalIsOpen(false);
-    setTransferError('');
+    closeModal('transfer');
   }
 
   useEffect(() => {
     if (account) {
-      setDepositAmount(0);
-      setWithdrawAmount(0);
-      setTransferAmount(0);
-      setTransferAccount('');
+      setAmounts({
+        deposit: 0,
+        withdraw: 0,
+        transfer: 0,
+      });
+      setErrors({
+        deposit: '',
+        withdraw: '',
+        transfer: '',
+      });
+      setCurrentBalance(account.balance);
     }
   }, [account]);
 
-
-  const openDepositModal = () => {
-    console.log('open deposit modal')
-    setDepositModalIsOpen(true);
-  }
-  const closeDepositModal = () => {
-    console.log('close deposit modal')
-    setDepositModalIsOpen(false);
-  }
-
-  const openWithdrawModal = () => {
-    console.log('open withdraw modal')
-    setWithdrawModalIsOpen(true);
-  }
-  const closeWithdrawModal = () => {
-    console.log('close withdraw modal')
-    setWithdrawModalIsOpen(false);
-  }
-
-  const openTransferModal = () => {
-    console.log('open transfer modal')
-    setTransferModalIsOpen(true);
-  }
-  const closeTransferModal = () => {
-    console.log('close transfer modal')
-    setTransferModalIsOpen(false);
-  }
-
   if (!account) {
-    return "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    return "huh";
   }
 
-
-
-    return(
-      <>
+  return (
+    <>
       <section className="section is-large">
         <div className="card">
-
-        <h2 className="subtitle">Hello {account.firstName}</h2>
-        <h2 className="subtitle">Your current balance is {account.balance}</h2>
-        <div className="container">
-          <h2>wat do</h2>
-          <div className="field is-grouped">
-            <p className="control">
-              <button className="button is-primary" onClick={openDepositModal}>Deposit</button>
-            </p>
-            <p className="control">
-              <button className="button is-link" onClick={openWithdrawModal}>Withdraw</button>
-            </p>
-            <p className="control">
-              <button className="button is-link" onClick={openTransferModal}>Transfer</button>
-            </p>
+          <h6 className="subtitle">ID: {account.id}</h6>
+          <h2 className="subtitle">Hello {account.firstName}</h2>
+          <h2 className="subtitle">Your current balance is {currentBalance}</h2>
+          <div className="container">
+            <h2>wat do</h2>
+            <div className="field is-grouped">
+              <p className="control">
+                <button className="button is-primary" onClick={() => openModal('deposit')}>Deposit</button>
+              </p>
+              <p className="control">
+                <button className="button is-link" onClick={() => openModal('withdraw')}>Withdraw</button>
+              </p>
+              <p className="control">
+                <button className="button is-link" onClick={() => openModal('transfer')}>Transfer</button>
+              </p>
+            </div>
           </div>
-        </div>
         </div>
       </section>
 
-
-      <Modal isOpen={isDepositModalOpen} onRequestClose={closeDepositModal}>
-      <div class="modal">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-          <header class="modal-card-head">
-            <p class="modal-card-title">Modal title</p>
-            <button class="delete" aria-label="close"></button>
-          </header>
-          <section class="modal-card-body">
-            <h2>Deposit</h2>
-          </section>
-          <footer class="modal-card-foot">
-          <button onClick={closeDepositModal}>Cancel</button>            
-          </footer>
+      <section>
+        <div className="card">
+          <h2 className="subtitle">Transaction History</h2>
+          <div className="container">
+            <div className="card">
+              <div className="card-content">
+                <div className="content">
+                    {transactions.map((transaction, index) => (
+                      <div key={index} className="transaction">
+                        <p>Transaction {index + 1}</p>
+                        <p>Date: {transaction.date}</p>
+                        <p>Description: {transaction.description}</p>
+                        <p>Amount: ${transaction.amount}</p>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-        
+      </section>
+
+      <DepositModal
+        isOpen={modalIsOpen.deposit}
+        onClose={() => closeModal('deposit')}
+        onDeposit={handleDeposit}
+        amount={amounts.deposit}
+        onChangeAmount={(e) => handleChangeAmount('deposit', e)}
+        depositError={errors.deposit}
+      />
+
+      <WithdrawalModal
+        isOpen={modalIsOpen.withdraw}
+        onClose={() => closeModal('withdraw')}
+        onWithdraw={handleWithdraw}
+        amount={amounts.withdraw}
+        onChangeAmount={(e) => handleChangeAmount('withdraw', e)}
+        depositError={errors.withdraw}
+      />
+
+      <Modal
+        isOpen={modalIsOpen.transfer}
+        onRequestClose={() => closeModal('transfer')}
+        contentLabel="Transfer Modal"
+        ariaHideApp={false}
+      >
       </Modal>
-      </>
-    );
+    </>
+  );
 }
 
 export default Dashboard;

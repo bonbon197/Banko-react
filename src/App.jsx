@@ -10,7 +10,7 @@ import HomePage from './components/HomePage'
 import RegistrationForm from './components/RegistrationForm'
 import LoginForm from './components/LoginForm'
 import Dashboard from './components/Dashboard'
-import initializeDataStorage from './db/accounts'
+import initializeDataStorage from './db/initializeDataStorage'
 
 function App() {
 
